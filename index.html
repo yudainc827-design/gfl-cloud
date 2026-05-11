@@ -3,250 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GFL.CLOUD | Art Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
+    <title>GFL.CLOUD | Omniverse V15</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@200;400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
+            --accent: #00f2fe; --royal: #7117ea; --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1); --bg-dark: #050505;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; cursor: none; }
-        
-        body {
-            background: #050505;
-            color: #fff;
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        body { 
+            background: var(--bg-dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh; overflow: hidden; display: flex;
         }
 
-        /* Animated Background Canvas */
-        #bg-canvas {
-            position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
-        }
+        /* --- BACKGROUND SENI --- */
+        #canvas-bg { position: fixed; inset: 0; z-index: -1; background: linear-gradient(125deg, #050505, #12002e, #001a1a); background-size: 400% 400%; animation: gradientMove 15s infinite alternate; }
+        @keyframes gradientMove { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
 
-        /* Custom Cursor */
-        #cursor {
-            width: 8px; height: 8px; background: var(--primary); border-radius: 50%;
-            position: fixed; pointer-events: none; z-index: 9999;
-            box-shadow: 0 0 15px var(--primary); transition: transform 0.1s;
+        /* --- LOGIN SYSTEM --- */
+        #login-screen {
+            position: fixed; inset: 0; z-index: 9999; background: #000;
+            display: flex; align-items: center; justify-content: center; transition: 1s cubic-bezier(0.85, 0, 0.15, 1);
         }
+        .login-box {
+            background: var(--glass); backdrop-filter: blur(40px); border: 1px solid var(--border);
+            padding: 50px; border-radius: 40px; text-align: center; width: 380px;
+        }
+        .login-btn {
+            width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent);
+            background: none; color: #fff; font-size: 1.5rem; margin: 30px 0; transition: 0.4s;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+        .login-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 50px var(--accent); transform: scale(1.1); }
 
-        /* Glass Sidebar */
+        /* --- SIDEBAR KECIL & ARTISTIK --- */
         .sidebar {
-            width: 280px;
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(30px);
-            border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 40px 20px;
-            z-index: 10;
+            width: 70px; background: rgba(0,0,0,0.6); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; padding: 30px 0; z-index: 100;
         }
-
-        .brand {
-            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 60px; text-align: center;
-        }
-
         .nav-link {
-            padding: 18px 25px; border-radius: 15px; margin-bottom: 10px;
-            font-size: 0.85rem; font-weight: 600; color: #888;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; align-items: center; gap: 15px;
-            border: 1px solid transparent;
+            width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; margin-bottom: 25px; transition: 0.4s; color: #555;
         }
-        .nav-link:hover { color: #fff; background: var(--glass); transform: translateX(10px); }
-        .nav-link.active { 
-            color: #fff; background: var(--glass); border-color: var(--primary);
-            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.1);
+        .nav-link:hover, .nav-link.active { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
+
+        /* PROFIL KECIL DI BAWAH */
+        .profile-stack { margin-top: auto; position: relative; cursor: pointer; }
+        .p-circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent); overflow: hidden; transition: 0.4s; }
+        .p-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .p-circle:hover { transform: scale(1.2) rotate(10deg); }
+
+        /* --- MAIN VIEWPORT --- */
+        .viewport { flex: 1; display: flex; flex-direction: column; position: relative; }
+        
+        .top-bar { padding: 40px 50px; display: flex; flex-direction: column; gap: 20px; background: linear-gradient(to bottom, #000, transparent); }
+        .main-input { 
+            background: transparent; border: none; border-bottom: 2px solid var(--border);
+            font-size: 2.5rem; font-weight: 800; color: #fff; font-family: 'Syne'; width: 100%; outline: none;
         }
+        .controls { display: flex; gap: 15px; align-items: center; }
 
-        /* Main Workspace */
-        .workspace { flex: 1; display: flex; flex-direction: column; position: relative; }
+        /* --- GRID & CARDS --- */
+        .scroll-view { flex: 1; overflow-y: auto; padding: 20px 50px 50px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
 
-        .top-nav {
-            padding: 40px 60px; display: flex; flex-direction: column; gap: 30px;
+        .card { 
+            background: var(--glass); border: 1px solid var(--border); border-radius: 25px; 
+            overflow: hidden; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: fadeUp 0.6s ease;
         }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
 
-        .input-hero {
-            background: transparent; border: none; font-size: 2.5rem;
-            font-weight: 800; color: #fff; outline: none;
-            font-family: 'Syne', sans-serif;
+        .media-container { width: 100%; height: 350px; background: #000; overflow: hidden; }
+        .media-container img, .media-container video { width: 100%; height: 100%; object-fit: cover; }
+        
+        .card-body { padding: 20px; }
+        .q-badge { font-size: 0.6rem; font-weight: 800; color: var(--accent); text-transform: uppercase; }
+        
+        .btn-download-cool {
+            width: 100%; background: #fff; color: #000; border: none; padding: 12px;
+            border-radius: 12px; font-weight: 900; font-size: 0.7rem; margin-top: 15px;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .input-hero::placeholder { color: rgba(255,255,255,0.05); }
+        .btn-download-cool:hover { background: var(--accent); letter-spacing: 1px; }
 
-        .action-row { display: flex; gap: 15px; align-items: center; }
-
-        .btn-neon {
-            padding: 12px 28px; border-radius: 30px; font-size: 0.75rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
-            border: 1px solid var(--primary); background: transparent; color: var(--primary);
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.1);
+        /* --- OVERLAY VIEWER --- */
+        #overlay {
+            position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.98);
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(30px);
         }
-        .btn-neon:hover { background: var(--primary); color: #000; box-shadow: 0 0 30px var(--primary); }
-
-        /* Artistic Grid */
-        .scroll-container { flex: 1; overflow-y: auto; padding: 0 60px 60px; }
-        .art-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 40px;
-        }
-
-        .art-card {
-            background: var(--glass); border: 1px solid var(--border);
-            border-radius: 24px; padding: 15px; transition: 0.5s;
-            position: relative; overflow: hidden;
-        }
-        .art-card:hover { transform: translateY(-15px) scale(1.02); border-color: var(--secondary); }
-
-        .media-box {
-            width: 100%; height: 400px; border-radius: 18px; overflow: hidden;
-            background: #000; margin-bottom: 20px;
-        }
-        .media-box img, .media-box video { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
-        .art-card:hover img { transform: scale(1.1); filter: saturate(1.5); }
-
-        .card-meta { display: flex; justify-content: space-between; align-items: center; }
-        .card-info h4 { font-family: 'Syne', sans-serif; font-size: 1.1rem; }
-        .card-info p { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
-
-        .dl-icon {
-            width: 45px; height: 45px; background: #fff; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #000; font-weight: 800; transition: 0.3s;
-        }
-        .dl-icon:hover { background: var(--primary); transform: rotate(90deg); }
-
-        /* Custom Scrollbar */
-        .scroll-container::-webkit-scrollbar { width: 4px; }
-        .scroll-container::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+        #v-frame { max-width: 95vw; max-height: 90vh; border-radius: 20px; box-shadow: 0 0 100px rgba(0,242,254,0.1); }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
-    <div id="cursor"></div>
+    <div id="canvas-bg"></div>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h1 style="font-family:'Syne'; font-size: 2rem;">GFL.CLOUD</h1>
+            <p style="font-size: 0.6rem; letter-spacing: 5px; color: #444; margin-top: 5px;">OMNIVERSE ARCHIVE</p>
+            <button class="login-btn" onclick="unlock()">🔑</button>
+            <input type="password" id="pass" placeholder="SECURITY KEY" style="width:100%; background:none; border:1px solid #222; color:#fff; text-align:center; padding:10px; border-radius:10px;">
+        </div>
+    </div>
 
     <aside class="sidebar">
-        <div class="brand">GFL.CLOUD</div>
-        <nav>
-            <div class="nav-link active" onclick="changeF('All', this)"><span>✦</span> ALL ARCHIVE</div>
-            <div class="nav-link" onclick="changeF('Image', this)"><span>📸</span> VISUAL ARTS</div>
-            <div class="nav-link" onclick="changeF('Video', this)"><span>🎬</span> CINEMATICS</div>
-        </nav>
+        <div class="nav-link active" onclick="setF('All', this)">✦</div>
+        <div class="nav-link" onclick="setF('Image', this)">📸</div>
+        <div class="nav-link" onclick="setF('Video', this)">🎬</div>
+        <div class="nav-link" onclick="setF('Doc', this)">📄</div>
+        <div class="nav-link" onclick="setF('Link', this)">🌍</div>
+
+        <div class="profile-stack" onclick="document.getElementById('p-up').click()">
+            <div class="p-circle"><img src="https://via.placeholder.com/80" id="avatar-img"></div>
+            <input type="file" id="p-up" hidden onchange="changeAvatar(event)">
+        </div>
     </aside>
 
-    <main class="workspace">
-        <header class="top-nav">
-            <input type="text" id="t-input" class="input-hero" placeholder="Name your masterpiece...">
-            <div class="action-row">
-                <button class="btn-neon" onclick="document.getElementById('f-upload').click()">+ IMPORT SOURCE</button>
-                <input type="file" id="f-upload" hidden onchange="process(event)">
-                <div style="font-size: 0.6rem; color: #444; font-weight: 800;">ENCRYPTED STORAGE ACTIVE</div>
+    <main class="viewport">
+        <header class="top-bar">
+            <input type="text" id="m-title" class="main-input" placeholder="Title or URL...">
+            <div class="controls">
+                <select id="m-quality" style="background:#000; color:#fff; border:1px solid #222; padding:10px; border-radius:10px; font-size:0.7rem;">
+                    <option value="8K MASTER">8K MASTER</option>
+                    <option value="4K CINEMA">4K CINEMA</option>
+                    <option value="2K ETERNAL">2K ETERNAL</option>
+                    <option value="1800K HD">1800K HD</option>
+                    <option value="1080P">1080P</option>
+                    <option value="760P">760P</option>
+                </select>
+                <button onclick="document.getElementById('f-up').click()" style="background:#fff; color:#000; border:none; padding:10px 25px; border-radius:10px; font-weight:800; font-size:0.7rem;">+ UPLOAD SOURCE</button>
+                <button onclick="fetchExternal()" style="background:var(--accent); color:#000; border:none; padding:10px 25px; border-radius:10px; font-weight:800; font-size:0.7rem;">BYPASS LINK</button>
+                <input type="file" id="f-up" hidden multiple onchange="multiUpload(event)">
+                <input type="text" id="search" placeholder="Search archive..." oninput="render()" style="background:var(--glass); border:1px solid #222; color:#fff; padding:10px 20px; border-radius:10px; flex:1;">
             </div>
         </header>
 
-        <section class="scroll-container">
-            <div class="art-grid" id="art-grid"></div>
+        <section class="scroll-view">
+            <div class="grid" id="main-grid"></div>
         </section>
     </main>
 
+    <div id="overlay" onclick="this.style.display='none'"><div id="v-frame"></div></div>
+
     <script>
-        let db, currentFilter = 'All';
+        let db, filter = 'All';
 
-        // Background Animation
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let pts = [];
+        const r = indexedDB.open('GFL_OMNI_V15', 1);
+        r.onupgradeneeded = e => {
+            const d = e.target.result;
+            d.createObjectStore('data', {keyPath: 'id'});
+            d.createObjectStore('user', {keyPath: 'k'});
+        };
+        r.onsuccess = e => { db = e.target.result; render(); loadP(); };
 
-        function initBG() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            pts = [];
-            for(let i=0; i<50; i++) pts.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:Math.random()-0.5, vy:Math.random()-0.5});
+        function unlock() {
+            document.getElementById('login-screen').style.transform = 'translateY(-100%)';
         }
 
-        function drawBG() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(0, 242, 255, 0.1)";
-            pts.forEach(p => {
-                p.x += p.vx; p.y += p.vy;
-                if(p.x<0 || p.x>canvas.width) p.vx *= -1;
-                if(p.y<0 || p.y>canvas.height) p.vy *= -1;
-                ctx.beginPath(); ctx.arc(p.x, p.y, 1, 0, Math.PI*2); ctx.fill();
-            });
-            requestAnimationFrame(drawBG);
-        }
-        initBG(); drawBG();
+        async function multiUpload(e) {
+            const files = Array.from(e.target.files);
+            const q = document.getElementById('m-quality').value;
+            const t = document.getElementById('m-title').value;
 
-        // Database
-        const req = indexedDB.open('GFL_ART_V13', 1);
-        req.onupgradeneeded = e => e.target.result.createObjectStore('v13', {keyPath:'id'});
-        req.onsuccess = e => { db = e.target.result; render(); };
-
-        // Mouse
-        document.addEventListener('mousemove', e => {
-            const c = document.getElementById('cursor');
-            c.style.left = e.clientX + 'px';
-            c.style.top = e.clientY + 'px';
-        });
-
-        function process(e) {
-            const file = e.target.files[0];
-            const rd = new FileReader();
-            rd.onload = ev => {
-                const item = {
-                    id: Date.now(),
-                    title: document.getElementById('t-input').value || "Untitled Art",
-                    type: file.type.includes('video') ? 'Video' : 'Image',
-                    data: ev.target.result
+            for (const file of files) {
+                const rd = new FileReader();
+                rd.onload = ev => {
+                    const type = file.type.includes('video') ? 'Video' : (file.type.includes('image') ? 'Image' : 'Doc');
+                    const entry = {
+                        id: Date.now() + Math.random(),
+                        t: t || file.name,
+                        type: type,
+                        d: ev.target.result,
+                        q: q,
+                        date: new Date()
+                    };
+                    db.transaction('data', 'readwrite').objectStore('data').add(entry).onsuccess = render;
                 };
-                db.transaction('v13', 'readwrite').objectStore('v13').add(item).onsuccess = render;
-            };
-            rd.readAsDataURL(file);
+                rd.readAsDataURL(file);
+            }
+        }
+
+        function fetchExternal() {
+            const url = document.getElementById('m-title').value;
+            if(!url.includes('http')) return alert("Enter Link first");
+            const entry = { id: Date.now(), t: "Cloud Stream", type: 'Link', d: url, q: "EXTERNAL", date: new Date() };
+            db.transaction('data', 'readwrite').objectStore('data').add(entry).onsuccess = render;
         }
 
         function render() {
-            const grid = document.getElementById('art-grid');
+            const grid = document.getElementById('main-grid');
+            const s = document.getElementById('search').value.toLowerCase();
             grid.innerHTML = '';
-            db.transaction('v13').objectStore('v13').getAll().onsuccess = e => {
-                e.target.result.filter(i => currentFilter === 'All' || i.type === currentFilter).reverse().forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'art-card';
-                    const media = item.type === 'Image' ? `<img src="${item.data}">` : `<video src="${item.data}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>`;
-                    div.innerHTML = `
-                        <div class="media-box">${media}</div>
-                        <div class="card-meta">
-                            <div class="card-info">
-                                <p>${item.type}</p>
-                                <h4>${item.title}</h4>
-                            </div>
-                            <div class="dl-icon" onclick="dl(${item.id})">↓</div>
+            
+            db.transaction('data').objectStore('data').getAll().onsuccess = e => {
+                let items = e.target.result.filter(i => (filter === 'All' || i.type === filter) && i.t.toLowerCase().includes(s));
+                items.sort((a,b) => b.date - a.date).forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    let m = item.type === 'Image' ? `<img src="${item.d}">` : (item.type === 'Video' ? `<video src="${item.d}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; font-size:3rem;">${item.type === 'Doc' ? '📄' : '🌍'}</div>`);
+                    
+                    card.innerHTML = `
+                        <div class="media-container" onclick="view('${item.d}', '${item.type}')">${m}</div>
+                        <div class="card-body">
+                            <span class="q-badge">${item.q}</span>
+                            <h4 style="margin:5px 0;">${item.t}</h4>
+                            <button class="btn-download-cool" onclick="dl(${item.id})">📥 DOWNLOAD MASTER</button>
                         </div>
                     `;
-                    grid.appendChild(div);
+                    grid.appendChild(card);
                 });
             };
         }
 
-        function changeF(f, el) {
-            currentFilter = f;
+        function setF(f, el) {
+            filter = f;
             document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
             render();
         }
 
+        function view(d, t) {
+            const o = document.getElementById('overlay');
+            const f = document.getElementById('v-frame');
+            o.style.display = 'flex';
+            if(t === 'Image') f.innerHTML = `<img src="${d}" style="max-width:100%; max-height:90vh;">`;
+            else if(t === 'Video') f.innerHTML = `<video src="${d}" controls autoplay style="max-width:100%; max-height:90vh;"></video>`;
+            else if(t === 'Link') f.innerHTML = `<iframe src="${d}" style="width:90vw; height:80vh; border:none; background:#fff;"></iframe>`;
+            else alert("Document downloaded only.");
+        }
+
         function dl(id) {
-            db.transaction('v13').objectStore('v13').get(id).onsuccess = e => {
+            db.transaction('data').objectStore('data').get(id).onsuccess = e => {
                 const i = e.target.result;
-                const a = document.createElement('a'); a.href = i.data; a.download = i.title; a.click();
+                if(i.type === 'Link') window.open(`https://savefrom.net/?url=${i.d}`, '_blank');
+                else { const a = document.createElement('a'); a.href = i.d; a.download = i.t; a.click(); }
+            };
+        }
+
+        function changeAvatar(e) {
+            const rd = new FileReader();
+            rd.onload = ev => {
+                document.getElementById('avatar-img').src = ev.target.result;
+                db.transaction('user', 'readwrite').objectStore('user').put({k: 'av', v: ev.target.result});
+            };
+            rd.readAsDataURL(e.target.files[0]);
+        }
+
+        function loadP() {
+            db.transaction('user').objectStore('user').get('av').onsuccess = e => {
+                if(e.target.result) document.getElementById('avatar-img').src = e.target.result.v;
             };
         }
     </script>
 </body>
-</html>
+</html>v
