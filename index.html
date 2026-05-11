@@ -79,4 +79,170 @@
         .control-row { display: flex; gap: 12px; align-items: center; }
         .btn-elite {
             padding: 10px 22px; border-radius: 8px; font-size: 0.75rem;
-            font-weight: 800; text
+            font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            transition: 0.3s; border: none; cursor: none;
+        }
+        .btn-p { background: #fff; color: #000; }
+        .btn-s { background: transparent; color: #fff; border: 1px solid var(--border); }
+        .btn-elite:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        .sel-elite {
+            background: #111; border: 1px solid var(--border); color: #fff;
+            padding: 8px 15px; border-radius: 8px; font-size: 0.75rem;
+        }
+
+        /* Grid penataan */
+        .scroll-area { flex: 1; overflow-y: auto; padding: 50px; }
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #0a0a0a; border-radius: 20px; overflow: hidden;
+            border: 1px solid var(--border); transition: 0.4s;
+        }
+        .card:hover { border-color: #444; transform: translateY(-5px); }
+
+        .card-media { width: 100%; height: 350px; background: #000; overflow: hidden; }
+        .card-media img, .card-media video { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        .card:hover .card-media img { transform: scale(1.05); filter: brightness(0.7); }
+
+        .card-body { padding: 25px; }
+        .card-tag { font-size: 0.6rem; font-weight: 800; color: var(--dim); text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 15px; }
+
+        .btn-dl {
+            width: 100%; padding: 12px; background: var(--glass); border: 1px solid var(--border);
+            color: #fff; border-radius: 10px; font-size: 0.7rem; font-weight: 800; transition: 0.3s;
+        }
+        .btn-dl:hover { background: #fff; color: #000; }
+
+        #viewer {
+            position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.95);
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+    <div id="cursor-f"></div>
+
+    <aside class="sidebar">
+        <div class="brand">GFL.CLOUD</div>
+        <div class="nav-list">
+            <div class="nav-btn active" onclick="setF('All', this)"><span>●</span> ALL ARCHIVE</div>
+            <div class="nav-btn" onclick="setF('Image', this)"><span>○</span> VISUALS</div>
+            <div class="nav-btn" onclick="setF('Video', this)"><span>○</span> CINEMATICS</div>
+            <div class="nav-btn" onclick="setF('Link', this)"><span>○</span> EXTERNAL</div>
+        </div>
+    </aside>
+
+    <main class="main-view">
+        <header class="top-bar">
+            <div class="input-group">
+                <input type="text" id="in-t" class="input-main" placeholder="Label of source...">
+                <div class="control-row">
+                    <select id="in-q" class="sel-elite">
+                        <option value="8K LOSSLESS">8K LOSSLESS</option>
+                        <option value="4K MASTER">4K MASTER</option>
+                    </select>
+                    <button class="btn-elite btn-p" onclick="document.getElementById('f-in').click()">+ IMPORT</button>
+                    <button class="btn-elite btn-s" onclick="bypass()">BYPASS LINK</button>
+                    <input type="file" id="f-in" hidden onchange="up(event)">
+                </div>
+            </div>
+        </header>
+
+        <section class="scroll-area">
+            <div class="grid" id="g"></div>
+        </section>
+    </main>
+
+    <div id="viewer" onclick="this.style.display='none'"><div id="v-c"></div></div>
+
+    <script>
+        let db, filter = 'All';
+
+        const r = indexedDB.open('GFL_ELITE_V11', 1);
+        r.onupgradeneeded = e => e.target.result.createObjectStore('s', {keyPath: 'id'});
+        r.onsuccess = e => { db = e.target.result; render(); };
+
+        document.addEventListener('mousemove', e => {
+            document.getElementById('cursor').style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            document.getElementById('cursor-f').style.transform = `translate(${e.clientX - 12}px, ${e.clientY - 12}px)`;
+        });
+
+        function up(e) {
+            const f = e.target.files[0];
+            const rd = new FileReader();
+            rd.onload = ev => {
+                const data = {
+                    id: Date.now(),
+                    t: document.getElementById('in-t').value || f.name,
+                    tp: f.type.includes('video') ? 'Video' : 'Image',
+                    d: ev.target.result,
+                    q: document.getElementById('in-q').value
+                };
+                db.transaction('s', 'readwrite').objectStore('s').add(data).onsuccess = render;
+            };
+            rd.readAsDataURL(f);
+        }
+
+        function bypass() {
+            const u = document.getElementById('in-t').value;
+            if(!u.includes('http')) return alert("Paste link in Title");
+            const data = { id: Date.now(), t: "Stream Source", tp: 'Link', d: u, q: "RAW LINK" };
+            db.transaction('s', 'readwrite').objectStore('s').add(data).onsuccess = render;
+        }
+
+        function render() {
+            const container = document.getElementById('g');
+            container.innerHTML = '';
+            db.transaction('s').objectStore('s').getAll().onsuccess = e => {
+                e.target.result.filter(i => filter === 'All' || i.tp === filter).sort((a,b) => b.id - a.id).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'card';
+                    let media = item.tp === 'Image' ? `<img src="${item.d}">` : 
+                               (item.tp === 'Video' ? `<video src="${item.d}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>` : `<div style="height:350px; display:flex; align-items:center; justify-content:center; font-size:3rem;">🔗</div>`);
+                    
+                    div.innerHTML = `
+                        <div class="card-media" onclick="v('${item.d}', '${item.tp}')">${media}</div>
+                        <div class="card-body">
+                            <span class="card-tag">${item.q}</span>
+                            <h3 class="card-title">${item.t}</h3>
+                            <button class="btn-dl" onclick="dl(${item.id})">DOWNLOAD MASTER</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            };
+        }
+
+        function setF(f, el) {
+            filter = f;
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            render();
+        }
+
+        function dl(id) {
+            db.transaction('s').objectStore('s').get(id).onsuccess = e => {
+                const i = e.target.result;
+                if(i.tp === 'Link') return window.open(i.d, '_blank');
+                const a = document.createElement('a'); a.href = i.d; a.download = `GFL_${i.t}`; a.click();
+            };
+        }
+
+        function v(s, t) {
+            const view = document.getElementById('viewer');
+            const cont = document.getElementById('v-c');
+            view.style.display = 'flex';
+            if(t === 'Image') cont.innerHTML = `<img src="${s}" style="max-width:90vw; max-height:85vh; border-radius:15px;">`;
+            else if(t === 'Video') cont.innerHTML = `<video src="${s}" controls autoplay style="max-width:90vw; max-height:85vh; border-radius:15px;"></video>`;
+            else cont.innerHTML = `<iframe src="${s}" style="width:90vw; height:85vh; border:none; border-radius:15px; background:#fff;"></iframe>`;
+        }
+    </script>
+</body>
+</html>
