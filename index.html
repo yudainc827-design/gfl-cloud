@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>gfl.cloud | The Artisan Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&family=Playfair+Display:ital,wght@1,900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon: #00f2fe; --violet: #7117ea; --accent: #ff00cc; --gold: #ffd700;
+            --bg: #010409; --sidebar-w: 220px; --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: var(--bg); color: #f0f6fc; font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow: hidden; height: 100vh; display: flex;
+            background-image: radial-gradient(circle at 20% 30%, #1a1b3a 0%, #010409 100%);
+            transition: background 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- LOGIN: HIGH VIBRANCE --- */
+        #auth-screen {
+            position: fixed; inset: 0; z-index: 100000;
+            background: linear-gradient(135deg, #010409, #0d1117, #1a1b3a);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .login-card {
+            background: var(--glass); backdrop-filter: blur(100px);
+            padding: 40px; border-radius: 40px; border: 1px solid var(--border);
+            width: 90%; max-width: 380px; text-align: center;
+            box-shadow: 0 0 80px rgba(113, 23, 234, 0.15);
+        }
+        .ai-spirit {
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            background: linear-gradient(45deg, var(--neon), var(--accent), var(--gold));
+            border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%;
+            animation: spiritDance 4s infinite alternate ease-in-out;
+            box-shadow: 0 0 30px var(--accent);
+        }
+        @keyframes spiritDance { 0% { transform: scale(1) rotate(0deg); border-radius: 35% 65%; } 100% { transform: scale(1.1) rotate(20deg); border-radius: 65% 35%; filter: hue-rotate(90deg); } }
+
+        /* --- SIDEBAR: MINIMALIST & ART PROFILE --- */
+        .sidebar {
+            width: var(--sidebar-w); background: rgba(1, 4, 9, 0.9);
+            border-right: 1px solid var(--border); padding: 25px 15px;
+            display: flex; flex-direction: column; z-index: 1000; backdrop-filter: blur(30px);
+        }
+        .profile-mini { 
+            display: flex; align-items: center; gap: 10px; margin-bottom: 40px;
+            padding: 10px; border-radius: 15px; background: var(--glass);
+        }
+        .avatar-container {
+            width: 45px; height: 45px; border-radius: 12px;
+            border: 1.5px solid var(--neon); overflow: hidden; cursor: pointer;
+            transition: 0.5s; animation: morphMini 6s infinite alternate;
+        }
+        @keyframes morphMini { 0% { border-radius: 12px 20px; } 100% { border-radius: 20px 12px; } }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .cat-btn {
+            background: none; border: none; color: #8b949e; text-align: left;
+            padding: 12px 15px; border-radius: 12px; cursor: pointer;
+            font-weight: 700; transition: 0.4s; margin-bottom: 5px; font-size: 0.75rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .cat-btn.active { background: var(--glass); color: var(--neon); transform: translateX(5px); }
+
+        /* --- MAIN VIEW --- */
+        .main-app { flex: 1; padding: 30px; overflow-y: auto; scroll-behavior: smooth; }
+        .nav-lite { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .search-engine {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 12px 20px; border-radius: 50px; color: white; width: 280px;
+            transition: 0.4s; backdrop-filter: blur(10px); font-size: 0.8rem;
+        }
+        .search-engine:focus { width: 320px; border-color: var(--neon); }
+
+        .console-hub {
+            background: var(--glass); padding: 20px; border-radius: 30px;
+            border: 1px solid var(--border); margin-bottom: 30px;
+        }
+        .row-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .row-group input, .row-group select { 
+            flex: 1; padding: 10px; border-radius: 10px; background: #0d1117; 
+            border: 1px solid var(--border); color: white; font-size: 0.75rem;
+        }
+
+        /* --- GALLERY: STAGGERED REVEAL --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .art-card {
+            background: #0d1117; border-radius: 35px; overflow: hidden;
+            border: 1px solid var(--border); position: relative;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: cardFade 0.6s ease-out backwards;
+        }
+        @keyframes cardFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .art-card:hover { transform: translateY(-10px); border-color: var(--neon); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+        .media-prev { width: 100%; height: 380px; object-fit: cover; cursor: pointer; }
+        
+        .info-panel { padding: 20px; background: linear-gradient(to top, #0d1117, transparent); margin-top: -80px; position: relative; }
+        .res-tag { font-size: 0.55rem; font-weight: 800; color: var(--neon); background: rgba(0,242,254,0.1); padding: 3px 8px; border-radius: 5px; }
+
+        .btn-unduh-master {
+            margin-top: 15px; width: 100%; padding: 14px; border-radius: 15px;
+            background: linear-gradient(45deg, var(--neon), var(--violet));
+            color: white; font-weight: 800; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.75rem;
+        }
+
+        /* --- OMNI FRAME (NO EXIT) --- */
+        #omni-modal {
+            position: fixed; inset: 0; z-index: 200000; background: rgba(0,0,0,0.96);
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(40px);
+        }
+        .omni-content { width: 92%; height: 88vh; border-radius: 25px; overflow: hidden; display: flex; justify-content: center; }
+        iframe, video, img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 15px; }
+    </style>
+</head>
+<body>
+
+    <div id="omni-modal" onclick="this.style.display='none'">
+        <div class="omni-content" id="omni-wrap" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <div id="auth-screen">
+        <div class="login-card">
+            <div class="ai-spirit"></div>
+            <h1 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; color: white;">gfl.cloud</h1>
+            <p style="color: var(--neon); font-size: 0.55rem; letter-spacing: 5px; margin-bottom: 30px;">ARTISAN BIOMETRIC CORE</p>
+            <input type="text" id="u-id" placeholder="Owner Identity" style="width:100%; padding:14px; border-radius:15px; margin-bottom:10px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:white; text-align:center;">
+            <input type="password" id="u-pass" placeholder="Fingerprint Key" style="width:100%; padding:14px; border-radius:15px; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:white; text-align:center;">
+            <button onclick="login()" style="width:100%; padding:16px; border-radius:15px; margin-top:20px; background:var(--neon); border:none; font-weight:900; cursor:pointer;">ACCESS VAULT</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="profile-mini">
+            <div class="avatar-container" onclick="document.getElementById('p-up').click()">
+                <img src="https://via.placeholder.com/150" id="user-p">
+                <input type="file" id="p-up" hidden accept="image/*" onchange="changeProfile(event)">
+            </div>
+            <div style="overflow: hidden;">
+                <h4 id="user-name" style="font-size: 0.8rem; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</h4>
+                <p style="font-size: 0.45rem; color: var(--neon); font-weight: 700;">ARCHIVIST</p>
+            </div>
+        </div>
+
+        <nav id="categories">
+            <button class="cat-btn active" onclick="setCat('All', '#010409')">♾️ Everything</button>
+            <button class="cat-btn" onclick="setCat('Image', '#0a1a2e')">🖼️ HD Photo</button>
+            <button class="cat-btn" onclick="setCat('Video', '#1a0d2e')">🎬 Cinema</button>
+            <button class="cat-btn" onclick="setCat('Doc', '#0d1a0d')">📄 Archive</button>
+            <button class="cat-btn" onclick="setCat('Link', '#1a1a0d')">🔗 Networks</button>
+        </nav>
+    </div>
+
+    <div class="main-app">
+        <div class="nav-lite">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-style: italic;">Artisan Collection</h2>
+            <input type="text" id="find" onkeyup="render()" class="search-engine" placeholder="Cari kenangan spesifik...">
+        </div>
+
+        <div class="console-hub">
+            <div class="row-group">
+                <input type="text" id="t-inp" placeholder="Judul Mahakarya atau URL Link...">
+                <select id="q-val">
+                    <option value="1800K">💎 1800K Hybrid</option>
+                    <option value="8K">8K Master</option>
+                    <option value="4K">4K Ultra</option>
+                    <option value="2K">2K Cinema</option>
+                    <option value="1800">1800p High</option>
+                    <option value="760">760p SD</option>
+                </select>
+                <input type="file" id="f-up" hidden onchange="ultraFastUpload(event)">
+                <button onclick="document.getElementById('f-up').click()" style="background:var(--neon); color:black; border:none; padding:10px 20px; border-radius:12px; font-weight:800; cursor:pointer; font-size: 0.75rem;">+ UPLOAD</button>
+                <button onclick="saveLink()" style="background:var(--violet); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:800; cursor:pointer; font-size: 0.75rem;">🔗 LINK</button>
+            </div>
+        </div>
+
+        <div class="grid" id="main-grid"></div>
+    </div>
+
+    <script>
+        const DB_NAME = 'GFL_ARTISAN_V5';
+        let db;
+        let user = localStorage.getItem('gfl_u');
+        let currentCat = 'All';
+
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = e => {
+            const d = e.target.result;
+            d.createObjectStore('data', {keyPath: 'id'});
+            d.createObjectStore('profile', {keyPath: 'key'});
+        };
+        req.onsuccess = e => {
+            db = e.target.result;
+            if(user) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('user-name').innerText = user;
+                loadProfile(); render();
+            }
+        };
+
+        function login() {
+            const n = document.getElementById('u-id').value;
+            if(n) { localStorage.setItem('gfl_u', n); location.reload(); }
+        }
+
+        function changeProfile(e) {
+            const f = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = ev => {
+                document.getElementById('user-p').src = ev.target.result;
+                db.transaction('profile', 'readwrite').objectStore('profile').put({key: 'avatar', val: ev.target.result});
+            };
+            reader.readAsDataURL(f);
+        }
+
+        function loadProfile() {
+            db.transaction('profile').objectStore('profile').get('avatar').onsuccess = e => {
+                if(e.target.result) document.getElementById('user-p').src = e.target.result.val;
+            };
+        }
+
+        function ultraFastUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const title = document.getElementById('t-inp').value || file.name;
+            const q = document.getElementById('q-val').value;
+
+            let cat = "Image";
+            if(file.type.includes('video')) cat = "Video";
+            else if(file.type.includes('pdf')) cat = "Doc";
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = e => {
+                const item = { 
+                    id: Date.now(), title, cat, type: file.type, 
+                    content: e.target.result, quality: q, timestamp: Date.now() 
+                };
+                db.transaction('data', 'readwrite').objectStore('data').add(item).oncomplete = () => {
+                    document.getElementById('t-inp').value = "";
+                    render();
+                };
+            };
+        }
+
+        function saveLink() {
+            const url = document.getElementById('t-inp').value;
+            if(!url.startsWith('http')) return alert("Gunakan URL yang valid!");
+            const item = { id: Date.now(), title: "External Access", cat: "Link", type: "link", content: url, quality: 'Online', timestamp: Date.now() };
+            db.transaction('data', 'readwrite').objectStore('data').add(item).oncomplete = () => {
+                document.getElementById('t-inp').value = "";
+                render();
+            };
+        }
+
+        function setCat(c, color) {
+            currentCat = c;
+            document.body.style.background = `radial-gradient(circle at center, ${color}, #010409)`;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.innerText.includes(c)));
+            render();
+        }
+
+        function openOmni(src, type) {
+            const modal = document.getElementById('omni-modal');
+            const wrap = document.getElementById('omni-wrap');
+            modal.style.display = 'flex';
+            if(type === 'link') wrap.innerHTML = `<iframe src="${src}" allowfullscreen></iframe>`;
+            else if(type.includes('video')) wrap.innerHTML = `<video src="${src}" controls autoplay></video>`;
+            else if(type.includes('pdf')) wrap.innerHTML = `<iframe src="${src}"></iframe>`;
+            else wrap.innerHTML = `<img src="${src}">`;
+        }
+
+        function editTitle(id, val) {
+            const store = db.transaction('data', 'readwrite').objectStore('data');
+            store.get(id).onsuccess = e => {
+                const d = e.target.result; d.title = val; store.put(d);
+            };
+        }
+
+        function render() {
+            const grid = document.getElementById('main-grid');
+            const search = document.getElementById('find').value.toLowerCase();
+            grid.innerHTML = '';
+
+            db.transaction('data').objectStore('data').getAll().onsuccess = e => {
+                let items = e.target.result;
+                items = items.filter(i => i.title.toLowerCase().includes(search) && (currentCat === 'All' || i.cat === currentCat));
+                items.sort((a,b) => b.timestamp - a.timestamp);
+
+                items.forEach((item, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'art-card';
+                    card.style.animationDelay = `${idx * 0.05}s`;
+                    
+                    let prev = '';
+                    if(item.cat === 'Image') prev = `<img src="${item.content}" class="media-prev" onclick="openOmni('${item.content}', '${item.type}')">`;
+                    else if(item.cat === 'Video') prev = `<video src="${item.content}" class="media-prev" onclick="openOmni('${item.content}', '${item.type}')"></video>`;
+                    else prev = `<div class="media-prev" style="display:flex;align-items:center;justify-content:center;background:#161b22;font-size:3rem;" onclick="openOmni('${item.content}', '${item.type}')">${item.cat === 'Link' ? '🔗' : '📄'}</div>`;
+
+                    card.innerHTML = `
+                        ${prev}
+                        <div class="info-panel">
+                            <span class="res-tag">${item.quality} MASTER</span>
+                            <input value="${item.title}" onchange="editTitle(${item.id}, this.value)" style="background:none; border:none; color:white; font-size:1rem; font-weight:800; width:100%; margin: 8px 0; outline:none; font-family: 'Space Grotesk', sans-serif;">
+                            <p style="font-size:0.5rem; color:#8b949e;">UL: ${new Date(item.timestamp).toLocaleDateString()}</p>
+                            <a href="${item.content}" download="GFL_HD_${item.title}" class="btn-unduh-master">📥 UNDUH HD</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            };
+        }
+    </script>
+</body>
+</html>
