@@ -3,214 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GFL.CLOUD | Omniverse V15</title>
+    <title>GFL.CLOUD | Supreme Eternal</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@200;400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --accent: #00f2fe; --royal: #7117ea; --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1); --bg-dark: #050505;
+            --border: rgba(255, 255, 255, 0.1); --bg: #030303; --danger: #ff4b2b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
         body { 
-            background: var(--bg-dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
             height: 100vh; overflow: hidden; display: flex;
         }
 
-        /* --- BACKGROUND SENI --- */
-        #canvas-bg { position: fixed; inset: 0; z-index: -1; background: linear-gradient(125deg, #050505, #12002e, #001a1a); background-size: 400% 400%; animation: gradientMove 15s infinite alternate; }
-        @keyframes gradientMove { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
-
-        /* --- LOGIN SYSTEM --- */
-        #login-screen {
+        /* --- SENI LATAR BELAKANG --- */
+        #bg-canvas { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at top right, #1a0033, #000, #001a1a); }
+        
+        /* --- LOGIN & WELCOME (EASY & ARTISTIC) --- */
+        #gate {
             position: fixed; inset: 0; z-index: 9999; background: #000;
-            display: flex; align-items: center; justify-content: center; transition: 1s cubic-bezier(0.85, 0, 0.15, 1);
+            display: flex; align-items: center; justify-content: center; transition: 1.5s cubic-bezier(0.9, 0, 0.1, 1);
         }
-        .login-box {
-            background: var(--glass); backdrop-filter: blur(40px); border: 1px solid var(--border);
-            padding: 50px; border-radius: 40px; text-align: center; width: 380px;
+        .gate-card { text-align: center; animation: pulse 4s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
+        .enter-btn {
+            background: none; border: 2px solid var(--accent); color: var(--accent);
+            padding: 15px 40px; border-radius: 50px; font-weight: 800; font-size: 1rem;
+            margin-top: 30px; transition: 0.4s; box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
         }
-        .login-btn {
-            width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent);
-            background: none; color: #fff; font-size: 1.5rem; margin: 30px 0; transition: 0.4s;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
-        }
-        .login-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 50px var(--accent); transform: scale(1.1); }
+        .enter-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 50px var(--accent); }
 
-        /* --- SIDEBAR KECIL & ARTISTIK --- */
+        /* --- SIDEBAR MINIMALIS & PROFIL HIDUP --- */
         .sidebar {
-            width: 70px; background: rgba(0,0,0,0.6); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; align-items: center; padding: 30px 0; z-index: 100;
+            width: 65px; background: rgba(0,0,0,0.8); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; padding: 25px 0; z-index: 100;
+            backdrop-filter: blur(20px);
         }
-        .nav-link {
-            width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center;
-            justify-content: center; margin-bottom: 25px; transition: 0.4s; color: #555;
+        .nav-item {
+            width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; margin-bottom: 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); color: #444; font-size: 1.2rem;
         }
-        .nav-link:hover, .nav-link.active { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
+        .nav-item:hover, .nav-item.active { background: var(--accent); color: #000; box-shadow: 0 0 25px var(--accent); transform: rotate(10deg); }
 
-        /* PROFIL KECIL DI BAWAH */
-        .profile-stack { margin-top: auto; position: relative; cursor: pointer; }
-        .p-circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent); overflow: hidden; transition: 0.4s; }
-        .p-circle img { width: 100%; height: 100%; object-fit: cover; }
-        .p-circle:hover { transform: scale(1.2) rotate(10deg); }
+        .profile-zone { margin-top: auto; cursor: pointer; text-align: center; }
+        .p-avatar { 
+            width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent); 
+            overflow: hidden; transition: 0.3s; position: relative;
+        }
+        .p-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .p-avatar:hover { transform: scale(1.3); box-shadow: 0 0 20px var(--accent); }
 
-        /* --- MAIN VIEWPORT --- */
+        /* --- VIEWPORT --- */
         .viewport { flex: 1; display: flex; flex-direction: column; position: relative; }
         
-        .top-bar { padding: 40px 50px; display: flex; flex-direction: column; gap: 20px; background: linear-gradient(to bottom, #000, transparent); }
-        .main-input { 
-            background: transparent; border: none; border-bottom: 2px solid var(--border);
-            font-size: 2.5rem; font-weight: 800; color: #fff; font-family: 'Syne'; width: 100%; outline: none;
+        .header { padding: 40px 50px; background: linear-gradient(to bottom, #000, transparent); }
+        .title-input { 
+            background: transparent; border: none; font-size: 2.8rem; font-weight: 800; 
+            color: #fff; font-family: 'Syne'; width: 100%; outline: none; margin-bottom: 20px;
         }
-        .controls { display: flex; gap: 15px; align-items: center; }
+        .title-input::placeholder { color: #111; }
 
-        /* --- GRID & CARDS --- */
-        .scroll-view { flex: 1; overflow-y: auto; padding: 20px 50px 50px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .toolbar { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        .tool-btn { padding: 12px 25px; border-radius: 12px; font-weight: 800; font-size: 0.7rem; border: none; transition: 0.3s; }
+        .btn-main { background: #fff; color: #000; }
+        .btn-accent { background: var(--accent); color: #000; }
+        .search-box { background: var(--glass); border: 1px solid var(--border); color: #fff; padding: 12px 20px; border-radius: 12px; flex: 1; }
+
+        /* --- GRID CONTENT --- */
+        .scroller { flex: 1; overflow-y: auto; padding: 20px 50px 50px; scroll-behavior: smooth; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
 
         .card { 
             background: var(--glass); border: 1px solid var(--border); border-radius: 25px; 
-            overflow: hidden; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: fadeUp 0.6s ease;
+            overflow: hidden; transition: 0.5s; position: relative;
         }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .card:hover { transform: translateY(-10px); border-color: var(--accent); }
 
-        .media-container { width: 100%; height: 350px; background: #000; overflow: hidden; }
-        .media-container img, .media-container video { width: 100%; height: 100%; object-fit: cover; }
+        .media-host { width: 100%; height: 320px; background: #000; overflow: hidden; cursor: pointer; }
+        .media-host img, .media-host video { width: 100%; height: 100%; object-fit: cover; transition: 0.7s; }
+        .card:hover img { transform: scale(1.1); filter: brightness(0.8); }
         
-        .card-body { padding: 20px; }
-        .q-badge { font-size: 0.6rem; font-weight: 800; color: var(--accent); text-transform: uppercase; }
-        
-        .btn-download-cool {
-            width: 100%; background: #fff; color: #000; border: none; padding: 12px;
-            border-radius: 12px; font-weight: 900; font-size: 0.7rem; margin-top: 15px;
-            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-download-cool:hover { background: var(--accent); letter-spacing: 1px; }
+        .card-info { padding: 20px; }
+        .badge { font-size: 0.6rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
+
+        .action-row { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-dl { flex: 4; background: #fff; color: #000; border-radius: 10px; font-weight: 900; font-size: 0.7rem; padding: 10px; text-align: center; border: none; }
+        .btn-del { flex: 1; background: var(--danger); color: #fff; border-radius: 10px; border: none; }
 
         /* --- OVERLAY VIEWER --- */
-        #overlay {
+        #viewer {
             position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.98);
-            display: none; align-items: center; justify-content: center; backdrop-filter: blur(30px);
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(40px);
         }
-        #v-frame { max-width: 95vw; max-height: 90vh; border-radius: 20px; box-shadow: 0 0 100px rgba(0,242,254,0.1); }
+        #v-frame { max-width: 95vw; max-height: 90vh; border-radius: 20px; border: 1px solid var(--border); }
     </style>
 </head>
 <body>
 
-    <div id="canvas-bg"></div>
+    <div id="bg-canvas"></div>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h1 style="font-family:'Syne'; font-size: 2rem;">GFL.CLOUD</h1>
-            <p style="font-size: 0.6rem; letter-spacing: 5px; color: #444; margin-top: 5px;">OMNIVERSE ARCHIVE</p>
-            <button class="login-btn" onclick="unlock()">🔑</button>
-            <input type="password" id="pass" placeholder="SECURITY KEY" style="width:100%; background:none; border:1px solid #222; color:#fff; text-align:center; padding:10px; border-radius:10px;">
+    <div id="gate">
+        <div class="gate-card">
+            <h1 style="font-family:'Syne'; font-size: 3rem; letter-spacing: -2px;">GFL.CLOUD</h1>
+            <p style="font-size: 0.6rem; letter-spacing: 8px; color: #555;">SUPREME OMNI-SYSTEM V16</p>
+            <button class="enter-btn" onclick="openGate()">AUTHORIZE BIOMETRIC</button>
         </div>
     </div>
 
     <aside class="sidebar">
-        <div class="nav-link active" onclick="setF('All', this)">✦</div>
-        <div class="nav-link" onclick="setF('Image', this)">📸</div>
-        <div class="nav-link" onclick="setF('Video', this)">🎬</div>
-        <div class="nav-link" onclick="setF('Doc', this)">📄</div>
-        <div class="nav-link" onclick="setF('Link', this)">🌍</div>
+        <div class="nav-item active" onclick="setFilter('All', this)">✦</div>
+        <div class="nav-item" onclick="setFilter('Image', this)">📸</div>
+        <div class="nav-item" onclick="setFilter('Video', this)">🎬</div>
+        <div class="nav-item" onclick="setFilter('Doc', this)">📄</div>
+        <div class="nav-item" onclick="setFilter('Link', this)">🌍</div>
 
-        <div class="profile-stack" onclick="document.getElementById('p-up').click()">
-            <div class="p-circle"><img src="https://via.placeholder.com/80" id="avatar-img"></div>
-            <input type="file" id="p-up" hidden onchange="changeAvatar(event)">
+        <div class="profile-zone" onclick="document.getElementById('avatar-input').click()">
+            <div class="p-avatar"><img src="https://via.placeholder.com/100" id="current-avatar"></div>
+            <input type="file" id="avatar-input" hidden onchange="updateProfile(event)">
         </div>
     </aside>
 
     <main class="viewport">
-        <header class="top-bar">
-            <input type="text" id="m-title" class="main-input" placeholder="Title or URL...">
-            <div class="controls">
-                <select id="m-quality" style="background:#000; color:#fff; border:1px solid #222; padding:10px; border-radius:10px; font-size:0.7rem;">
-                    <option value="8K MASTER">8K MASTER</option>
+        <header class="header">
+            <input type="text" id="master-title" class="title-input" placeholder="Give it a name...">
+            <div class="toolbar">
+                <select id="master-q" style="background:#000; color:#fff; border:1px solid #333; padding:10px; border-radius:12px; font-size:0.7rem; font-weight:800;">
+                    <option value="1800K - 8K ULTRA">1800K - 8K ULTRA</option>
                     <option value="4K CINEMA">4K CINEMA</option>
                     <option value="2K ETERNAL">2K ETERNAL</option>
-                    <option value="1800K HD">1800K HD</option>
-                    <option value="1080P">1080P</option>
-                    <option value="760P">760P</option>
+                    <option value="1800 HD">1800 HD</option>
+                    <option value="760P SD">760P SD</option>
                 </select>
-                <button onclick="document.getElementById('f-up').click()" style="background:#fff; color:#000; border:none; padding:10px 25px; border-radius:10px; font-weight:800; font-size:0.7rem;">+ UPLOAD SOURCE</button>
-                <button onclick="fetchExternal()" style="background:var(--accent); color:#000; border:none; padding:10px 25px; border-radius:10px; font-weight:800; font-size:0.7rem;">BYPASS LINK</button>
-                <input type="file" id="f-up" hidden multiple onchange="multiUpload(event)">
-                <input type="text" id="search" placeholder="Search archive..." oninput="render()" style="background:var(--glass); border:1px solid #222; color:#fff; padding:10px 20px; border-radius:10px; flex:1;">
+                <button class="tool-btn btn-main" onclick="document.getElementById('upload-input').click()">+ UPLOAD SOURCE</button>
+                <button class="tool-btn btn-accent" onclick="bypassLink()">BYPASS URL</button>
+                <input type="file" id="upload-input" hidden multiple onchange="supremeUpload(event)">
+                <input type="text" id="search-engine" class="search-box" placeholder="Search your memories..." oninput="renderGrid()">
             </div>
         </header>
 
-        <section class="scroll-view">
+        <section class="scroller">
             <div class="grid" id="main-grid"></div>
         </section>
     </main>
 
-    <div id="overlay" onclick="this.style.display='none'"><div id="v-frame"></div></div>
+    <div id="viewer" onclick="this.style.display='none'"><div id="v-frame"></div></div>
 
     <script>
-        let db, filter = 'All';
+        let db, currentFilter = 'All';
 
-        const r = indexedDB.open('GFL_OMNI_V15', 1);
-        r.onupgradeneeded = e => {
+        // --- CORE DATABASE ---
+        const req = indexedDB.open('GFL_SUPREME_V16', 1);
+        req.onupgradeneeded = e => {
             const d = e.target.result;
-            d.createObjectStore('data', {keyPath: 'id'});
-            d.createObjectStore('user', {keyPath: 'k'});
+            d.createObjectStore('storage', {keyPath: 'id'});
+            d.createObjectStore('config', {keyPath: 'key'});
         };
-        r.onsuccess = e => { db = e.target.result; render(); loadP(); };
+        req.onsuccess = e => { db = e.target.result; renderGrid(); loadProfile(); };
 
-        function unlock() {
-            document.getElementById('login-screen').style.transform = 'translateY(-100%)';
-        }
+        function openGate() { document.getElementById('gate').style.transform = 'translateY(-100%)'; }
 
-        async function multiUpload(e) {
+        // --- UPLOAD SYSTEM (SUPREME SPEED) ---
+        async function supremeUpload(e) {
             const files = Array.from(e.target.files);
-            const q = document.getElementById('m-quality').value;
-            const t = document.getElementById('m-title').value;
+            const q = document.getElementById('master-q').value;
+            const t = document.getElementById('master-title').value;
 
             for (const file of files) {
-                const rd = new FileReader();
-                rd.onload = ev => {
+                const reader = new FileReader();
+                reader.onload = ev => {
                     const type = file.type.includes('video') ? 'Video' : (file.type.includes('image') ? 'Image' : 'Doc');
                     const entry = {
                         id: Date.now() + Math.random(),
-                        t: t || file.name,
+                        title: t || file.name,
                         type: type,
-                        d: ev.target.result,
-                        q: q,
+                        data: ev.target.result,
+                        quality: q,
                         date: new Date()
                     };
-                    db.transaction('data', 'readwrite').objectStore('data').add(entry).onsuccess = render;
+                    db.transaction('storage', 'readwrite').objectStore('storage').add(entry).onsuccess = renderGrid;
                 };
-                rd.readAsDataURL(file);
+                reader.readAsDataURL(file);
             }
         }
 
-        function fetchExternal() {
-            const url = document.getElementById('m-title').value;
-            if(!url.includes('http')) return alert("Enter Link first");
-            const entry = { id: Date.now(), t: "Cloud Stream", type: 'Link', d: url, q: "EXTERNAL", date: new Date() };
-            db.transaction('data', 'readwrite').objectStore('data').add(entry).onsuccess = render;
+        // --- LINK & DOWNLOADER ENGINE ---
+        function bypassLink() {
+            const url = document.getElementById('master-title').value;
+            if(!url.includes('http')) return alert("Paste External URL in Title Bar");
+            const entry = { id: Date.now(), title: "Cloud Stream", type: 'Link', data: url, quality: "BYPASS MASTER", date: new Date() };
+            db.transaction('storage', 'readwrite').objectStore('storage').add(entry).onsuccess = renderGrid;
         }
 
-        function render() {
+        // --- GRID RENDERER & SORT ---
+        function renderGrid() {
             const grid = document.getElementById('main-grid');
-            const s = document.getElementById('search').value.toLowerCase();
+            const query = document.getElementById('search-engine').value.toLowerCase();
             grid.innerHTML = '';
             
-            db.transaction('data').objectStore('data').getAll().onsuccess = e => {
-                let items = e.target.result.filter(i => (filter === 'All' || i.type === filter) && i.t.toLowerCase().includes(s));
+            db.transaction('storage').objectStore('storage').getAll().onsuccess = e => {
+                let items = e.target.result.filter(i => (currentFilter === 'All' || i.type === currentFilter) && i.title.toLowerCase().includes(query));
                 items.sort((a,b) => b.date - a.date).forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'card';
-                    let m = item.type === 'Image' ? `<img src="${item.d}">` : (item.type === 'Video' ? `<video src="${item.d}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; font-size:3rem;">${item.type === 'Doc' ? '📄' : '🌍'}</div>`);
+                    let media = item.type === 'Image' ? `<img src="${item.data}">` : 
+                               (item.type === 'Video' ? `<video src="${item.data}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>` : 
+                               `<div style="height:100%; display:flex; align-items:center; justify-content:center; font-size:4rem;">${item.type === 'Doc' ? '📄' : '🌍'}</div>`);
                     
                     card.innerHTML = `
-                        <div class="media-container" onclick="view('${item.d}', '${item.type}')">${m}</div>
-                        <div class="card-body">
-                            <span class="q-badge">${item.q}</span>
-                            <h4 style="margin:5px 0;">${item.t}</h4>
-                            <button class="btn-download-cool" onclick="dl(${item.id})">📥 DOWNLOAD MASTER</button>
+                        <div class="media-host" onclick="openView('${item.data}', '${item.type}')">${media}</div>
+                        <div class="card-info">
+                            <span class="badge">${item.quality}</span>
+                            <h4 style="margin:8px 0; font-size:0.9rem;">${item.title}</h4>
+                            <div class="action-row">
+                                <button class="btn-dl" onclick="downloadAsset(${item.id})">📥 DOWNLOAD SOURCE</button>
+                                <button class="btn-del" onclick="deleteItem(${item.id})">🗑️</button>
+                            </div>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -218,45 +226,51 @@
             };
         }
 
-        function setF(f, el) {
-            filter = f;
-            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        // --- OMNI SYSTEM FUNCTIONS ---
+        function setFilter(f, el) {
+            currentFilter = f;
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            render();
+            renderGrid();
         }
 
-        function view(d, t) {
-            const o = document.getElementById('overlay');
+        function openView(d, t) {
+            const v = document.getElementById('viewer');
             const f = document.getElementById('v-frame');
-            o.style.display = 'flex';
+            v.style.display = 'flex';
             if(t === 'Image') f.innerHTML = `<img src="${d}" style="max-width:100%; max-height:90vh;">`;
             else if(t === 'Video') f.innerHTML = `<video src="${d}" controls autoplay style="max-width:100%; max-height:90vh;"></video>`;
-            else if(t === 'Link') f.innerHTML = `<iframe src="${d}" style="width:90vw; height:80vh; border:none; background:#fff;"></iframe>`;
-            else alert("Document downloaded only.");
+            else if(t === 'Link' || t === 'Doc') f.innerHTML = `<iframe src="${d}" style="width:90vw; height:80vh; border:none; background:#fff;"></iframe>`;
         }
 
-        function dl(id) {
-            db.transaction('data').objectStore('data').get(id).onsuccess = e => {
+        function downloadAsset(id) {
+            db.transaction('storage').objectStore('storage').get(id).onsuccess = e => {
                 const i = e.target.result;
-                if(i.type === 'Link') window.open(`https://savefrom.net/?url=${i.d}`, '_blank');
-                else { const a = document.createElement('a'); a.href = i.d; a.download = i.t; a.click(); }
+                if(i.type === 'Link') window.open(`https://en.savefrom.net/?url=${i.data}`, '_blank');
+                else { const a = document.createElement('a'); a.href = i.data; a.download = `GFL_${i.title}`; a.click(); }
             };
         }
 
-        function changeAvatar(e) {
+        function deleteItem(id) {
+            if(confirm("Permanently erase this memory?")) {
+                db.transaction('storage', 'readwrite').objectStore('storage').delete(id).onsuccess = renderGrid;
+            }
+        }
+
+        function updateProfile(e) {
             const rd = new FileReader();
             rd.onload = ev => {
-                document.getElementById('avatar-img').src = ev.target.result;
-                db.transaction('user', 'readwrite').objectStore('user').put({k: 'av', v: ev.target.result});
+                document.getElementById('current-avatar').src = ev.target.result;
+                db.transaction('config', 'readwrite').objectStore('config').put({key: 'pfp', val: ev.target.result});
             };
             rd.readAsDataURL(e.target.files[0]);
         }
 
-        function loadP() {
-            db.transaction('user').objectStore('user').get('av').onsuccess = e => {
-                if(e.target.result) document.getElementById('avatar-img').src = e.target.result.v;
+        function loadProfile() {
+            db.transaction('config').objectStore('config').get('pfp').onsuccess = e => {
+                if(e.target.result) document.getElementById('current-avatar').src = e.target.result.val;
             };
         }
     </script>
 </body>
-</html>v
+</html>
